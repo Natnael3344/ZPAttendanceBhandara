@@ -1,4 +1,4 @@
-import { loginConstants } from './Login.actions';
+import { loginConstants } from "./Login.actons";
 
 const intialState = {
   loading: false,
@@ -7,6 +7,14 @@ const intialState = {
 
 export function login(state = intialState, action) {
   switch (action.type) {
+    case loginConstants.SET_LOADING:
+      return Object.assign({}, state, {
+        loading: true,
+      })
+    case loginConstants.CLEAR_LOADING:
+      return Object.assign({}, state, {
+        loading: false,
+      })
     case loginConstants.LOGIN_REQUEST:
       return Object.assign({}, state, {
         loading: true,

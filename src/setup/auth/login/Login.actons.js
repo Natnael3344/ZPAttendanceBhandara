@@ -1,68 +1,41 @@
 import { loginService } from './Login.services';
 import { stopSubmit } from 'redux-form';
-import { SuccesToaster, ErrorToaster } from '../../../helpers';
-import { OTPConstants } from '../OTP/OTP.actions';
-import * as RootNavigation from '../../../navigation/RootNavigation';
+import { SuccesToaster, ErrorToaster } from '../../helpers';
 import { CommonActionsCreator } from '../../../actions/CommonActionCreators';
-
+import * as RootNavigation from '../../routes-manager/RootNavigation'
+import { useNavigation } from '@react-navigation/native';
 export const loginConstants = {
   LOGIN_REQUEST: 'USERS_LOGIN_REQUEST',
   LOGIN_SUCCESS: 'USERS_LOGIN_SUCCESS',
   LOGIN_FAILURE: 'USERS_LOGIN_FAILURE',
+  SET_LOADING : 'SET_LOADING',
+  CLEAR_LOADING : 'CLEAR_LOADING'
 };
 
 export const loginActions = {
   login,
-  loginWithPassword,
+  // loginWithPassword,
   socialLogin,
 };
 
-function login(pdata) {
-  return (dispatch) => {
-    dispatch(CommonActionsCreator.fetching(loginConstants.LOGIN_REQUEST));
 
-    loginService.login(pdata)
+
+function login(number) {
+  
+  return (dispatch) => {
+    dispatch(CommonActionsCreator.fetching(loginConstants.SET_LOADING));
+    dispatch(CommonActionsCreator.fetching(loginConstants.LOGIN_REQUEST));
+    loginService.login(number)
       .then(
         user => {
-          if (user.status_code === 200) {
+          dispatch(CommonActionsCreator.fetching(loginConstants.CLEAR_LOADING));
+          console.log('user',user.login);
+          if (user.login === true) {
             dispatch(CommonActionsCreator.success(loginConstants.LOGIN_SUCCESS, user));
-            const successMessage = user.message;
-            RootNavigation.navigate("Otp", { 'personal_mobile': pdata.username });
-            SuccesToaster({ phonenumber: pdata.username }, successMessage);
-          } else {
-            dispatch(CommonActionsCreator.error(loginConstants.LOGIN_FAILURE, user));
-
-            let msg = '';
-            if (typeof user.message[0].msg !== 'undefined') {
-              msg = user.message[0].msg;
-            } else {
-              msg = user.message;
-            }
-
-            const validationErrors = { perosnal_mobile: msg };
-            dispatch(stopSubmit('Login', validationErrors));
-          }
-        },
-        error => {
-          ErrorToaster(" Alert ", "Something went wrong !!!");
-        }
-      );
-  };
-}
-
-function loginWithPassword(username) {
-  return (dispatch) => {
-    dispatch(CommonActionsCreator.fetching(loginConstants.LOGIN_REQUEST));
-
-    loginService.loginWithPassword(username)
-      .then(
-        user => {
-          if (user.data.status === "success") {
-            dispatch(CommonActionsCreator.success(loginConstants.LOGIN_SUCCESS, user));
-            dispatch(CommonActionsCreator.success(OTPConstants.OTP_SUCCESS, user));
             const successMessage = user.message;
             const param = {};
-            RootNavigation.navigate("Home");
+            console.log('test');
+            RootNavigation.navigate("home");
             SuccesToaster(param, 'Welcome to My Ambar!');
           } else {
             dispatch(CommonActionsCreator.error(loginConstants.LOGIN_FAILURE, user));
@@ -79,6 +52,7 @@ function loginWithPassword(username) {
           }
         },
         error => {
+          dispatch(CommonActionsCreator.fetching(loginConstants.CLEAR_LOADING));
           ErrorToaster(" Alert ", "Something went wrong !!!");
         }
       );

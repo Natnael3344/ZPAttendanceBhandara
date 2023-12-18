@@ -1,10 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { COLOR } from '../assets/css/styles';
+import { COLORS } from '../assets/css/styles';
 
 const Background = ({
-  colors = [COLOR.BACKGROUND_COLOR_START, COLOR.BACKGROUND_COLOR_END],
+  colors = [COLORS.BACKGROUND_COLOR_START, COLORS.BACKGROUND_COLOR_END],
+  
   start = { x: 0, y: 0 },
   end = { x: 1, y: 0 },
   children,

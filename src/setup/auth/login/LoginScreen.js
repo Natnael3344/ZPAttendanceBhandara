@@ -1,18 +1,80 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   View,
-  Text,
   ScrollView,
   Image,
   TextInput,
-  Button
+  Button,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import Background from '../../../components/Background';
-const LoginScreen = ({ navigation }) => {
+import { RadioGroup } from 'react-native-radio-buttons-group';
+import globalStyles, { COLOR, COLORS } from '../../../assets/css/styles';
+import { Field, reduxForm } from 'redux-form';
+import { LargeButton } from '../../../components/renderButton';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { renderTextField } from '../../../components/renderInput';
+import { loginActions } from './Login.actons';
+import validate from '../../../config/Validator';
+import ActivityLoader from '../../../components/loader/ActivityLoader';
+const LoginScreen = (props ) => {
  // props
-  // const { handleSubmit, reset, submitting,navigation } = props;
- 
-  
+  const { handleSubmit, reset, submitting,navigation } = props;
+  const [isModalVisible, setModalVisible] = useState(false);
+  useEffect(() => {
+    if (!isLoading) {
+      setModalVisible(false);
+    }else{
+      setModalVisible(true);
+    }
+  }, [isLoading]);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(state => state.login.loading);
+  useEffect(() => {
+    if (!isLoading) {
+      setModalVisible(false);
+    }else{
+      setModalVisible(true);
+    }
+  }, [isLoading]);
+  navigateToForgotPasswordScreen = () => {
+    navigation.navigate("Forgot");
+  }
+  _onSubmit =  (values) => {
+    Keyboard.dismiss()
+    props.login(values)
+  }
+  const radioButtons = useMemo(() => ([
+    {
+        id: '1', // acts as primary key, should be unique and non-empty string
+        label: 'English',
+        value: 'English',
+        color: '#11FFFFFF',
+        borderColor: '#11FFFFFF',
+        labelStyle:{
+          color:'white',
+        },
+        selected:true
+
+        
+    },
+    {
+        id: '2',
+        label: 'मराठी',
+        value: 'मराठी',
+        color: '#11FFFFFF',
+        borderColor: '#11FFFFFF',
+        labelStyle:{
+          color:'white',
+        }
+    }
+]), []);
+
+  const [value, setValue] = useState('English');
 
   // navigateToRegisterScreen = () => {
     
@@ -34,7 +96,21 @@ const LoginScreen = ({ navigation }) => {
   return( 
     <Background>
 <View style={{ flex: 1,}}>
-        {/* Your content goes here */}
+<Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, alignItems: 'center',flexDirection:'row',width:'300',height:'300'}}>
+            
+            <ActivityIndicator size="large" color={COLORS.BACKGROUND_COLOR_START}/>
+            <Text style={{marginLeft:5}}>Please wait...</Text>
+            
+          </View>
+        </View>
+      </Modal>
         <Text
           style={{
             alignSelf: 'flex-end',
@@ -49,124 +125,56 @@ const LoginScreen = ({ navigation }) => {
         </Text>
 
         <ScrollView style={{ flex: 1 }}>
-          <View style={{ alignItems: 'center', paddingTop: 70 }}>
+          <View style={{ alignItems: 'center', paddingTop: 70}}>
             <Image
               source={require('../../../assets/png/logo.png')} 
               style={{ width: 110, height: 120, marginBottom: 10 }}
             />
-
-            <View style={{ marginLeft: 20, marginRight: 20, backgroundColor: 'rgba(255, 255, 255, 0.5)', flexDirection: 'row', marginTop: 20 }}>
-              <Image
-                source={require('../../../assets/png/keypad.png')} 
-                style={{ width: 20, height: 20, marginVertical: 15, marginLeft: 15, marginRight: 10 }}
+            <View style={{width: '100%',paddingHorizontal:20,marginTop:20}}>
+              <Field
+                name="number"
+                label="Mobile Number*" 
+                component={renderTextField}
+                keyboardType={'phone-pad'}
+                inputStyle={globalStyles.AuthTextInput}
               />
-              <TextInput
-                id="number"
-                style={{
-                  flex: 1,
-                  backgroundColor: 'transparent',
-                  padding: 15,
-                  color: 'white',
-                }}
-                keyboardType="numeric"
-                maxLength={10}
-                placeholder="Enter Number"
-                placeholderTextColor="white"
+              <Field
+                name="password"
+                label="Password*" 
+                component={renderTextField}
+                keyboardType={'phone-pad'}
+                inputStyle={globalStyles.AuthTextInput}
               />
             </View>
+           
 
-            <View
+      <TouchableOpacity
+      onPress={handleSubmit(this._onSubmit)}
         style={{
-          flexDirection: 'row',
-          margin: 10,
+          width: '90%',
+          height: 50,
+          marginTop: 20,
+          marginBottom: 20,
           backgroundColor: 'transparent',
-        }}>
-        <Image
-          style={{
-            width: 20,
-            height: 20,
-            marginLeft: 15,
-            marginRight: 10,
-            alignSelf: 'center',
-          }}
-          source={require('../../../assets/png/password.png')} 
-        />
-        <TextInput
-          style={{
-            flex: 1,
-            height: 40,
-            marginRight: 20,
-            backgroundColor: 'transparent',
-            paddingTop: 15,
-            paddingRight: 15,
-            paddingBottom: 15,
-            color: 'white',
-          }}
-          placeholder="Password"
-          secureTextEntry={true}
-          placeholderTextColor="white"
-        />
-      </View>
-
-      <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 40,
-          marginTop: 10,
-          marginBottom: 10,
-          backgroundColor: 'white',
+          borderWidth: 2, 
+         borderColor: '#77FFFFFF',
+         borderRadius: 5,
           justifyContent: 'center',
-          alignItems: 'center',
+          alignItems: 'center',marginLeft:'20',marginRight:'20'
         }}>
-        <Text style={{ color: 'white', fontSize: 16 }}>Login</Text>
+        <Text style={{ color: 'white', fontSize: 16, fontWeight:'bold' }}>Login</Text>
       </TouchableOpacity>
+    
       <TouchableOpacity
-        style={{
-          width: '100%',
-          height: 40,
-          marginTop: 10,
-          marginBottom: 10,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{ color: 'white', fontSize: 16 }}>Register</Text>
-      </TouchableOpacity>
-
-      <View
+      onPress={navigateToForgotPasswordScreen}
         style={{
           flexDirection: 'row',
           marginTop: 10,
-          marginBottom: 10,
+          marginBottom: 20,
         }}>
-        <View style={{ flex: 1 }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{
-                width: 18,
-                height: 18,
-                marginLeft: 25,
-                marginRight: 10,
-                alignSelf: 'center',
-                display: 'none', 
-              }}
-              source={require('../../../assets/png/telephone.png')} 
-            />
-            <Text
-              style={{
-                color: 'white',
-                fontSize: 15,
-                marginLeft: 50,
-                marginRight: 10,
-                display: 'none', 
-              }}
-              numberOfLines={1}>
-              Contact Us
-            </Text>
+        <View style={{ flex: 1,alignItems:'center' }}>
+          
+           
             <View
               style={{
                 flexDirection: 'row',
@@ -191,29 +199,29 @@ const LoginScreen = ({ navigation }) => {
                 numberOfLines={1}>
                 Forgot Password
               </Text>
-            </View>
+            
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
+      <View 
+      style={{ 
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#77FFFFFF',
+    borderRadius: 5,
+    padding: 8,}}>
+      <RadioGroup 
+            radioButtons={radioButtons }
+            onPress={setValue}
+            selectedId={value}
+            layout='row'
+            
+            
+        />
+    </View>
 
-      <RadioGroup
-        style={{
-          flexDirection: 'row',
-          marginTop: 10,
-          marginBottom: 10,
-          backgroundColor: 'white',
-          elevation: 5,
-          padding: 5,
-        }}
-        selectedIndex={0} // Specify the default selected index
-        onChange={(index) => console.log(index)}>
-        <RadioButton value={1} style={{ marginRight: 10 }}>
-          <Text style={{ color: 'white' }}>English</Text>
-        </RadioButton>
-        <RadioButton value={2}>
-          <Text style={{ color: 'white' }}>मराठी</Text>
-        </RadioButton>
-      </RadioGroup>
+
           </View>
         </ScrollView>
 
@@ -224,36 +232,38 @@ const LoginScreen = ({ navigation }) => {
         source={require('../../../assets/png/adividwhite.png')} 
         style={{ width: 120, height: 50, alignSelf: 'center', marginBottom: 10 }}
       />
+      {/* Loader */}
+      
     </Background>
 );
 }
 
-export default LoginScreen;
-// const mapStateToPros = (state) => {
-//   return ({ 
-//       user: state.login,
-//       loading : state.login.loading,
-//   })
-// }
+// export default LoginScreen;
+const mapStateToPros = (state) => {
+  return ({ 
+      user: state.login,
+      loading : state.login.loading,
+  })
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//       login: (values) => dispatch(loginActions.login(values)),
-//       socialLogin : (socialData,data) => dispatch(loginActions.socialLogin(socialData,data)),
+const mapDispatchToProps = (dispatch) => {
+  return {
+      login: (values) => dispatch(loginActions.login(values)),
+      socialLogin : (socialData,data) => dispatch(loginActions.socialLogin(socialData,data)),
      
-//   }
-// }
+  }
+}
 
-// Login = connect(
-//   mapStateToPros,
-//   mapDispatchToProps
-// )(LoginScreen)
+Login = connect(
+  mapStateToPros,
+  mapDispatchToProps
+)(LoginScreen)
 
 
 
-// export default reduxForm({
-//   form: 'Login',
-//   validate
-// })(Login);
-
+export default reduxForm({
+  form: 'Login',
+  validate
+  
+})(Login);
 
