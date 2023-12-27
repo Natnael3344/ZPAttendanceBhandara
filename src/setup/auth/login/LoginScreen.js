@@ -76,23 +76,7 @@ const LoginScreen = (props ) => {
 
   const [value, setValue] = useState('English');
 
-  // navigateToRegisterScreen = () => {
-    
-  //     navigation.navigate("Register");
-    
-  // }
-
-  // _onSubmit = (values) => {
-  //   Keyboard.dismiss()
-  //   props.login(values)
-  // }
-  // const language = useSelector(getLanguage);
-  // let translations;
-  // if (language.language === 'en') {
-  //   translations = en;
-  // } else {
-  //   translations = hi;
-  // }
+ 
   return( 
     <Background>
 <View style={{ flex: 1,}}>

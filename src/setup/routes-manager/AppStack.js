@@ -27,9 +27,13 @@ import LogOut from '../auth/logout/LogOut';
 import Dashboard from '../../screens/Dashboard';
 import LoginScreen from '../auth/login/LoginScreen';
 import ForgotPassword from '../auth/forgot-password/ForgotPassword';
-import CheckIn from '../../screens/CheckIn';
-import UserImages from '../../screens/UserImages';
+import UserImages from '../../screens/user-images/UserImages';
 import globalStyles from '../../assets/css/styles';
+import CheckIn from '../../screens/check-in/CheckIn';
+import zpApi, { api, config } from '../../api/Api';
+import { connect } from 'react-redux';
+import { useEffect, useState } from 'react';
+import BottomTabsFirstStack from './BottomTabsFirstStack';
 const { width } = Dimensions.get('window');
 
 
@@ -64,64 +68,10 @@ performLogout = (props) => {
 
 
 
-const BottomTabsFirstStack = ({navigation}) => {
-  
- 
-  return (
-    <Stack.Navigator
-      initialRouteName="dashboard"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#005a64',
-        },
-        headerLeft: () => (
-          <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={{marginLeft: 15}}>
-          <Image
-            source={require('../../assets/png/arrow-back.png')}
-            resizeMode="contain"
-            style={{width: 25, height: 25}}
-          />
-        </TouchableOpacity>
-          
-        ),
-        headerTintColor: 'white',
-        headerTitleAlign: 'center',
-      }}>
-      
-      <Stack.Screen
-        name="dashboard"
-        component={Dashboard}
-        options={{
-          header: ({navigation, route, options}) => {
-            return <LogoTitle title={route.name} navigation={navigation} />;
-          },
-          title: 'Scan QR Code', //Set Header Title
-        }}
-      />
-     
-      <Stack.Screen
-        name="checkIn"
-        component={CheckIn}
-        options={{
-          title: 'Scan QR Code', //Set Header Title
-        }}
-      />
-        
-         <Stack.Screen
-        name="attach"
-        component={UserImages}
-        options={{
-          title: 'Attach Image', //Set Header Title
-        }}
-      />
-    </Stack.Navigator>
-  );
-};
 
-const LogoTitle = props => {
-  const navigation = useNavigation();
+
+export const LogoTitle = props => {
+  
   return (
     <View style={globalStyles.dashBoardAppBar}>
       <View style={{flex: 1, alignItems: 'flex-start'}}>
@@ -268,6 +218,97 @@ const DrawerNavigator = props => {
   
 
 
-export const AppStack = () => {
-  return <DrawerNavigator />;
+ const AppStack = () => {
+  const navigation = useNavigation();
+  return (
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerItemStyle: {marginVertical: 0},
+        drawerActiveTintColor: '#000000',
+        drawerActiveBackgroundColor: 'transparent',
+        inactiveTintColor: '#000000',
+        inactiveBackgroundColor: '',
+        backBehavior: 'history',
+        // header : ({ navigation, route, options }) => { return <BackHeader title={route.name} navigation={navigation} />}
+        headerStyle: {
+          backgroundColor: '#005a64',
+        },
+        headerLeft: () => (
+          <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{marginLeft: 15}}>
+          <Image
+            source={require('../../assets/png/arrow-back.png')}
+            resizeMode="contain"
+            style={{width: 25, height: 25}}
+          />
+        </TouchableOpacity>
+        ),
+        headerTintColor: 'white',
+        headerTitleAlign: 'center',
+      }}>
+      <Drawer.Screen
+        name="home"
+        component={BottomTabsFirstStack}
+        options={{
+          title: 'Scan QR Code',
+          headerShown: false,
+        }}
+      />
+      <Drawer.Screen
+        name="location"
+        component={MapRoute}
+        options={{
+          title: 'QR Map Locations',
+        }}
+      />
+     
+      <Drawer.Screen
+        name="activate"
+        component={ActivateQR}
+        options={{
+          title: 'Activate QR', //Set Header Title
+        }}
+      />
+      <Drawer.Screen
+        name="tour"
+        component={TourDairy}
+        options={{
+          title: 'My Tour Diary',
+        }}
+      />
+      <Drawer.Screen
+        name="phone"
+        component={PhoneInfo}
+        options={{
+          title: 'Phone Info',
+        }}
+      />
+      
+      <Drawer.Screen
+        name="contact"
+        component={MapLocation}
+        options={{
+          title: 'Contact Us',
+        }}
+      />
+      <Drawer.Screen
+        name="logout"
+        component={LogOut}
+        options={{
+          title: 'Logout',
+        }}
+      />
+      
+     
+    </Drawer.Navigator>
+  );
 };
+
+export default AppStack;
+// const AppStack = ({ user}) => {
+  
+//   return <DrawerNavigator />;
+// };
+ 

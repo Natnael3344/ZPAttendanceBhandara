@@ -2,15 +2,17 @@ import React from 'react';
 import { View, Text, Button, ScrollView, TouchableOpacity, ListView, StyleSheet,Image } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 
-const Dashboard = ({navigation}) => {
-
-    
+const Dashboard = (props) => {
+  const {navigation } = props;
+  navigateToCheckInScreen = () => {
+    navigation.navigate("checkIn");
+  }
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, padding: 10 }}>
         <View style={{ flex: 1, marginTop: 10 }}>
           <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-            <TouchableOpacity style={[styles.button,{backgroundColor:'#00c853'}]} onPress={() => { /* handle bt_checkin press */ }}>
+            <TouchableOpacity style={[styles.button,{backgroundColor:'#00c853'}]} onPress={navigateToCheckInScreen}>
               <Text style={styles.buttonText}>Check In</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button,{backgroundColor:'#ffccbc'}]} onPress={() => { /* handle bt_checkout press */ }}>

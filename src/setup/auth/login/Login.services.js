@@ -28,29 +28,11 @@ async function login(values) {
              model: model,
         // "password": values.password,   
     })
-    const response = await axios.post(VERIFY_URL, {
-        number: values.number,
-      });
+    
     try {
         
         const res = await zpApi.post(`${api}${config.endpoint.loginUrl}`, null, null, data);
-        // const res =  await axios.post(VERIFY_URL, {
-        //     // "number": values.number,
-        //      username: values.number,
-        //      password: values.password,
-        //      device_id: deviceid,
-        //      fcm_id: '',
-        //      app_version: myVersion,
-        //      os_version: versionos,
-        //      company: mobcompany,
-        //      model: model,
-
-        //   },{
-        //     headers: {
-        //       'Content-Type': 'application/x-www-form-urlencoded',
-        //     }});
-        // console.log('res');
-        // console.log(res);
+    
         return res;
     } catch (error) {
         return await Promise.reject(error);

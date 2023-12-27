@@ -10,11 +10,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 // import storage from 'redux-persist/lib/storage';
 import { login } from '../setup/auth/login';
 import { useStore } from "react-redux"; 
+import { checkIn } from '../screens/check-in';
+import { userImages } from '../screens/user-images';
 
 // All reducers assigns to single reducer
 const rootReducer = {
     form                :   formReducer,
-    login               :   login,    
+    login               :   login,
+    checkIn             :   checkIn,
+    userImages          :   userImages    
 }    
 
 // Preiststore Config

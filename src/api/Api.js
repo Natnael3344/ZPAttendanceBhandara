@@ -7,7 +7,10 @@ export const config = {
     endpoint : {
         forgotPassword : 'reset_password',
         loginUrl:'api/app/session/login.php',
-        verifyUrl:'api/app/session/verify'
+        verifyUrl:'api/app/session/verify',
+        checkInUrl :'api/app/attendance/check_in',
+        checkUserImagesUrl:'api/app/user_profile/user_profile_status',
+        dataSubmitUrl :'api/app/user_profile/user_profile_img'
     }
 }
 
@@ -15,6 +18,8 @@ export default class zpApi {
   static async baseHeaders() {
     const token = await getData('token_value');
     // const token = 'R0VpNTBwSHF5a2VpVU42dEZDSkd5QW83cHo1ZUVnalk4UEV4SGVvcW5PNXdraWwzelNsZHpqWTlFajMzVmMxQ1IyQkV1QlJWb1VURnFUZk1rcjQyNlM0WHNWV09GWEo1Rzl6b1pkdHJReTBLVHpxN3pGcGtSVDRZc0V6WnJVM2g2Y2lFUHIxdXpBbTF0ZUhUVXpjNENV64a15c5f58243';
+    //9607862209
+    //thirdi@#adivid2017
     return {
       'Content-Type': 'application/x-www-form-urlencoded',
       "Accept": "application/json",
@@ -93,7 +98,6 @@ export default class zpApi {
     if (requestType === 'post' || requestType === 'put') {
       return http[requestType](url, postData, requestConfig)
         .then(async response => {
-          console.log('Response Data:', response);
           return response.data;
         })
         .catch(error => {
@@ -103,3 +107,6 @@ export default class zpApi {
     }
   }
 }
+
+
+

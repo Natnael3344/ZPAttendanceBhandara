@@ -4,7 +4,7 @@ import { NavigationContainer, createNavigationContainerRef } from '@react-naviga
 import { connect } from 'react-redux';
 import { navigationRef } from './RootNavigation';
 import { AuthStack } from './AuthStack';
-import { AppStack } from './AppStack';
+import AppStack from './AppStack';
 
 
 
@@ -15,10 +15,10 @@ function Router(props) {
   {
     token = props.user.data.token_value;
   }
-
+ console.log('token',token);
   return (
     <NavigationContainer ref={navigationRef}>
-     { token ? <AppStack /> : <AuthStack  />   } 
+     {token ? <AppStack /> : <AuthStack  />} 
     {/* {   <AuthStack /> }   */}
     </NavigationContainer>
   );

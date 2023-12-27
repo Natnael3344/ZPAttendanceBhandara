@@ -29,7 +29,6 @@ function login(number) {
       .then(
         user => {
           dispatch(CommonActionsCreator.fetching(loginConstants.CLEAR_LOADING));
-          console.log('user',user.login);
           if (user.login === true) {
             dispatch(CommonActionsCreator.success(loginConstants.LOGIN_SUCCESS, user));
             const successMessage = user.message;
